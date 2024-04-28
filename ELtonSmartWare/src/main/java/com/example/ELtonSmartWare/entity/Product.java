@@ -1,8 +1,10 @@
 package com.example.ELtonSmartWare.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "products")
 public class Product {
     @Id

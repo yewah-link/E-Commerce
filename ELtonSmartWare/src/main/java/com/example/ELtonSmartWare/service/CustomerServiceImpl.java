@@ -1,4 +1,4 @@
 package com.example.ELtonSmartWare.service;
 
-public class CustomerServiceImpl {
+public class CustomerServiceImpl implements  CustomerService {
 }
