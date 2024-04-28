@@ -1,61 +1,24 @@
 package com.example.ELtonSmartWare.dto;
 
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+@Data
 public class ProductDTO {
+    private Long id;
+
     private String name;
-    private String description;
-    private double price;
-    private int quantity;
-    private byte[] image;
 
-    // Constructors
+    private  String description;
 
-    public ProductDTO(String name, String description, double price, int quantity, byte[] image) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.quantity = quantity;
-        this.image = image;
-    }
+    private Double price;
 
-    // Getters and setters
+    private MultipartFile image;
 
-    public String getName() {
-        return name;
-    }
+    private Long categoryId;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private byte[] returnedImage;
 
-    public String getDescription() {
-        return description;
-    }
+    private String categoryName;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
 }
