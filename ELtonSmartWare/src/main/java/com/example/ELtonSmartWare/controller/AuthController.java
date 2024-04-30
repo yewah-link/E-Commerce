@@ -1,17 +1,20 @@
 package com.example.ELtonSmartWare.controller;
 
 import com.example.ELtonSmartWare.dto.AuthenticationRequest;
+import com.example.ELtonSmartWare.dto.SignupRequest;
+import com.example.ELtonSmartWare.dto.UserDTO;
 import com.example.ELtonSmartWare.repository.UserRepository;
+import com.example.ELtonSmartWare.service.AuthService;
 import com.example.ELtonSmartWare.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import netscape.javascript.JSObject;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +34,8 @@ public class AuthController {
 
     private final UserRepository userRepository;
 
+    private final AuthService authService;
+
     private  final JwtUtil jwtUtil;
 
     public static final String TOKEN_PREFIX = "Bearer";
@@ -46,7 +51,9 @@ public class AuthController {
         }catch (BadCredentialsException e){
             throw new BadCredentialsException("Incorrect username or password");
         }
-        final UserDetails userDetails = UserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
         Optional<com.example.ELtonSmartWare.entity.User> optionalUser = userRepository.findFirstByEmail(userDetails.getUsername());
         final String jwt = jwtUtil.generateToken((userDetails.getUsername()));
 
@@ -56,7 +63,17 @@ public class AuthController {
                     .put("role",optionalUser.get().getRole())
                     .toString());
             response.addHeader(HEADER_STRING,TOKEN_PREFIX + jwt);
+
         }
+    }
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
+        if(authService.hasUserWithEmail(signupRequest.getEmail())){
+            return new ResponseEntity<>("User already exist",HttpStatus.NOT_ACCEPTABLE);
+        }
+        UserDTO userDTO = authService.createUser(signupRequest);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
+
     }
 
 }
