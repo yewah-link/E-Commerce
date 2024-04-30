@@ -14,6 +14,7 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    @Autowired
     private final UserRepository userRepository;
 
     @Autowired
@@ -24,10 +25,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<com.example.ELtonSmartWare.entity.User> optionalUser = userRepository.findFirstByEmail(username);
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("Username not found: " + username);
+        if (optionalUser.isEmpty()) { throw new UsernameNotFoundException("Username not found: ",null);
         }
-        com.example.ELtonSmartWare.entity.User user = optionalUser.get();
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(optionalUser.get().getEmail(), optionalUser.get().getPassword(), new ArrayList<>());
     }
 }
