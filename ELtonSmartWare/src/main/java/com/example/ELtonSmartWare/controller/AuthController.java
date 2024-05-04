@@ -1,12 +1,17 @@
 package com.example.ELtonSmartWare.controller;
 
 import com.example.ELtonSmartWare.dto.AuthenticationRequest;
+import com.example.ELtonSmartWare.dto.SignupRequest;
+import com.example.ELtonSmartWare.dto.UserDTO;
 import com.example.ELtonSmartWare.repository.UserRepository;
+import com.example.ELtonSmartWare.service.AuthService;
 import com.example.ELtonSmartWare.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +33,8 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
 
     private final UserRepository userRepository;
+
+    private final AuthService authService;
 
     private  final JwtUtil jwtUtil;
 
@@ -58,6 +65,15 @@ public class AuthController {
             response.addHeader(HEADER_STRING,TOKEN_PREFIX + jwt);
 
         }
+    }
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
+        if(authService.hasUserWithEmail(signupRequest.getEmail())){
+            return new ResponseEntity<>("User already exist",HttpStatus.NOT_ACCEPTABLE);
+        }
+        UserDTO userDTO = authService.createUser(signupRequest);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
+
     }
 
 }

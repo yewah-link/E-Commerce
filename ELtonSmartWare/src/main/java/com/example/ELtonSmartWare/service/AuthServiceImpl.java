@@ -19,28 +19,23 @@ public class AuthServiceImpl implements AuthService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserDTO createUser(SignupRequest signupRequest) {
-        // Create a new User entity
+        //Create a new User entity
         User user = new User();
 
         user.setEmail(signupRequest.getEmail());
         user.setName(signupRequest.getName());
         user.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword()));
         user.setRole(UserRole.CUSTOMER);
-        //user.createdUser = userRepository.save(user);
+        User createdUser = userRepository.save(user);
 
 
         UserDTO userDTO = new UserDTO();
-        //userDTO.setId(createdUser.getId());
+        userDTO.setId(createdUser.getId());
 
         return userDTO;
     }
 
-    private UserDTO convertToDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(user.getEmail());
-        userDTO.setName(user.getName());
-       // userDTO.setRole(user.getRole());
-        // You can include other properties as needed
-        return userDTO;
+   public boolean hasUserWithEmail(String email){
+        return userRepository.findFirstByEmail(email).isPresent();
     }
 }
