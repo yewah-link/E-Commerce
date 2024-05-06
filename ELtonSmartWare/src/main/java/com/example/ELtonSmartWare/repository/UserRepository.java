@@ -1,6 +1,7 @@
 package com.example.ELtonSmartWare.repository;
 
 import com.example.ELtonSmartWare.entity.User;
+import com.example.ELtonSmartWare.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 
     Optional<User> findFirstByEmail(String email);
+
+    User findByRole(UserRole userRole);
 }
 
