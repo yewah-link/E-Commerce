@@ -19,6 +19,7 @@ public class AuthServiceImpl implements AuthService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserDTO createUser(SignupRequest signupRequest) {
+
         //Create a new User entity
         User user = new User();
 
